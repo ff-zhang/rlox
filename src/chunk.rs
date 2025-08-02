@@ -3,18 +3,28 @@ use std::convert::TryFrom;
 #[derive(Debug, Copy, Clone)]
 #[repr(u8)]
 pub enum Opcode {
-    OpConstant = 0,
-    OpReturn = 1,
+    Constant = 0,
+    Add = 1,
+    Subtract = 2,
+    Multiply = 3,
+    Divide = 4,
+    Negate = 5,
+    Return = 6,
 }
 
 impl TryFrom<u8> for Opcode {
-    type Error = ();
+    type Error = String;
     
     fn try_from(value: u8) -> Result<Self, Self::Error> {
         match value { 
-            x if x == Opcode::OpConstant as u8 => Ok(Opcode::OpConstant),
-            x if x == Opcode::OpReturn as u8 => Ok(Opcode::OpReturn),
-            _ => Err(()),
+            0 => Ok(Opcode::Constant),
+            1 => Ok(Opcode::Add),
+            2 => Ok(Opcode::Subtract),
+            3 => Ok(Opcode::Multiply),
+            4 => Ok(Opcode::Divide),
+            5 => Ok(Opcode::Negate),
+            6 => Ok(Opcode::Return),
+            _ => Err(format!("Unknown value {}", value)),
         }
     }
 }

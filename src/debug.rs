@@ -16,15 +16,23 @@ impl Debug for Chunk {
     }
 }
 
-fn disassemble_instruction(this: &Chunk, offset: &mut usize) {
+pub fn disassemble_instruction(this: &Chunk, offset: &mut usize) {
     print!("{offset:04} ");
-    if *offset > 0 && this.lines[*offset - 1] == this.lines[*offset - 1] { print!("   | "); }
-    else { print!("{:04} ", this.lines[*offset]) }
+    if *offset > 0 && this.lines[*offset - 1] == this.lines[*offset - 1] {
+        print!("   | ");
+    } else {
+        print!("{:04} ", this.lines[*offset]);
+    }
 
     let instruction = this.code[*offset].try_into().unwrap();
     match instruction {
-        Opcode::OpConstant => constant_instruction("OP_CONSTANT", this, offset),
-        Opcode::OpReturn => simple_instruction("OP_RETURN", offset),
+        Opcode::Constant => constant_instruction("OP_CONSTANT", this, offset),
+        Opcode::Add => simple_instruction("OP_ADD", offset),
+        Opcode::Subtract => simple_instruction("OP_SUBTRACT", offset),
+        Opcode::Multiply => simple_instruction("OP_MULTIPLY", offset),
+        Opcode::Divide => simple_instruction("OP_DIVIDE", offset),
+        Opcode::Negate => simple_instruction("OP_NEGATE", offset),
+        Opcode::Return => simple_instruction("OP_RETURN", offset),
     }
 }
 
