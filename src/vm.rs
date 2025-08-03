@@ -3,8 +3,11 @@ use std::{
     fmt::Formatter,
 };
 
-use crate::chunk::{Chunk, Opcode, Value};
-use crate::debug::disassemble_instruction;
+use crate::{
+    chunk::{Chunk, Opcode, Value},
+    compile::compile,
+    debug::disassemble_instruction,
+};
 
 const STACK_MAX: usize = 256;
 
@@ -58,10 +61,9 @@ impl<'a> VirtualMachine<'a> {
         self.reset_stack();
     }
 
-    pub fn interpret(&mut self, chunk: &'a Chunk) -> Result<(), InterpretError> {
-        self.chunk = Some(chunk);
-        self.ip = self.chunk.unwrap().code.as_ptr();
-        self.run()
+    pub fn interpret(&mut self, source: &[u8]) -> Result<(), InterpretError> {
+        compile(source);
+        Ok(())
     }
 
     pub fn push(&mut self, value: Value) {
@@ -99,7 +101,7 @@ impl<'a> VirtualMachine<'a> {
                     unsafe { slot = slot.offset(1) };
                 }
                 println!();
-                
+
                 let mut offset = self.ip as usize - self.chunk.unwrap().code.as_ptr() as usize;
                 disassemble_instruction(self.chunk.unwrap(), &mut offset);
             }
@@ -129,7 +131,7 @@ impl<'a> VirtualMachine<'a> {
     fn reset_stack(&mut self) {
         self.top = self.stack.as_mut_ptr();
     }
-    
+
     // All below are macros originally
     fn read_byte(&mut self) -> u8 {
         unsafe {
