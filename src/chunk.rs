@@ -3,20 +3,20 @@ use std::convert::TryFrom;
 #[derive(Debug, Copy, Clone)]
 #[repr(u8)]
 pub enum Opcode {
-    Constant = 0,
-    Add = 1,
-    Subtract = 2,
-    Multiply = 3,
-    Divide = 4,
-    Negate = 5,
-    Return = 6,
+    Constant,
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Negate,
+    Return,
 }
 
 impl TryFrom<u8> for Opcode {
     type Error = String;
-    
+
     fn try_from(value: u8) -> Result<Self, Self::Error> {
-        match value { 
+        match value {
             0 => Ok(Opcode::Constant),
             1 => Ok(Opcode::Add),
             2 => Ok(Opcode::Subtract),
@@ -55,11 +55,5 @@ impl Chunk {
     pub fn add_constant(&mut self, value: Value) -> u8 {
         self.constants.push(value);
         (self.constants.len() - 1) as u8
-    }
-    
-    pub fn free(&mut self) {
-        self.code.clear();
-        self.constants.clear();
-        self.lines.clear();
     }
 }

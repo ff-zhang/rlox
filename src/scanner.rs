@@ -62,7 +62,7 @@ impl TokenType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Token<'a> {
     pub kind: TokenType,
     pub slice: &'a [u8],

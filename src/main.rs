@@ -24,7 +24,7 @@ fn repl(vm: &mut VirtualMachine) {
             break;
         }
 
-        vm.interpret(line.as_bytes()).unwrap();
+        let _ = vm.interpret(line.as_bytes());
         line.clear();
     }
 }
